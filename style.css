@@ -7,6 +7,11 @@
 body{
     font-family: sans-serif;
 }
+
+i{
+ cursor: pointer;
+}
+
 .navbar{
     display: flex;
     flex-direction: row;

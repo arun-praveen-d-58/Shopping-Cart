@@ -88,8 +88,7 @@ let shopItemsData = [
     },
   ];
 
-let basket = [ 
-];
+let basket = JSON.parse(localStorage.getItem("data")) || []
 
   /*
 let generateShop =()=>{
@@ -116,6 +115,10 @@ let generateShop =()=>{
    let generateShop = ()=>{
     return (shop.innerHTML = shopItemsData.map((x)=>{
         let { id, name, price, desc, img} = x;
+        let search = basket.find((x)=> x.id === id) || [];
+         
+
+
         return ` <div id=product-id-${id} class="item">
     <img width="220px" src=${img} alt="">
     <div class="details">
@@ -125,7 +128,9 @@ let generateShop =()=>{
             <h2>$ ${price}</h2>
              <div class="buttons">
                 <i class="bi bi-plus" onclick="increment(${id})"></i>
-                <div class="quantity" id="${id}">0</div>
+                <div class="quantity" id="${id}">
+                ${search.item === undefined ? 0 :search.item}
+                </div>
                 <i class="bi bi-dash" onclick="decrement(${id})"></i>
              </div>  
         </div>
@@ -139,7 +144,7 @@ let generateShop =()=>{
 
    let increment = (id)=>{
     let selectedItem = id
-   let searchItem = basket.find((x)=> x.id === selectedItem.id);   
+    let searchItem = basket.find((x)=> x.id === selectedItem.id);   
     
    if(searchItem === undefined){
    basket.push({
@@ -150,6 +155,8 @@ let generateShop =()=>{
    else{
     searchItem.item +=1;
    }
+
+   localStorage.setItem("data",JSON.stringify(basket));
     console.log(basket);
   update(selectedItem.id);  
 };
@@ -164,8 +171,11 @@ let generateShop =()=>{
     else{
      searchItem.item -=1;
     }
-     console.log(basket);
-     update(selectedItem.id);
+    update(selectedItem.id);
+    basket = basket.filter((x)=> x.item !==0); 
+    //console.log(basket);
+     
+     localStorage.setItem("data",JSON.stringify(basket));
   };
 
   let update = (id)=>{
@@ -180,3 +190,5 @@ let generateShop =()=>{
     cartIcon.innerHTML = basket.map((x)=>x.item).reduce((x,y)=>x+y,0);
     console.log(basket.map((x)=>x.item).reduce((x,y)=>x+y,0));
   };
+
+  calculations();
